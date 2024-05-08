@@ -10,7 +10,6 @@ class CatPage extends StatefulWidget {
 }
 
 class _CatPageState extends State<CatPage> {
-
   final CatBloc _catBloc = CatBloc();
 
   @override
@@ -24,11 +23,20 @@ class _CatPageState extends State<CatPage> {
         ),
         body: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               BlocBuilder<CatBloc, CatState>(
                 builder: (context, state) {
-                  return Text(
-                      "Cats ${state.maybeWhen(initial: () => "initial state", changed: (cat) => cat.text, loading: () => "loading", orElse: () => 0)}");
+                  return state.maybeWhen(
+                          loading: () => CircularProgressIndicator(),
+                          changed: (cat) => Container(
+                            width: MediaQuery.of(context).size.width - 100,
+                            child: Text(
+                                  cat.text,
+                                  textAlign: TextAlign.center,
+                                ),
+                          ),
+                          orElse: () => SizedBox());
                 },
               ),
               IconButton(
